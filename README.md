@@ -2,7 +2,7 @@
 
 **Verifique possíveis sinais de stealer sem precisar saber usar CMD.**
 
-**[Baixar para Windows x64](https://github.com/luqfuck/hardcore-anti-grabber/releases/latest/download/HardcoreAntiGrabber.exe)** · [Todas as versões](https://github.com/luqfuck/hardcore-anti-grabber/releases)
+**[Baixar para Windows x64](https://github.com/luqpc/hardcore-anti-grabber/releases/latest/download/HardcoreAntiGrabber.exe)** · [Todas as versões](https://github.com/luqpc/hardcore-anti-grabber/releases)
 
 ## Como usar
 
