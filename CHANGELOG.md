@@ -1,5 +1,20 @@
 # Histórico
 
+## v2.1.0 — 28/10/2026
+
+- Dois cliques iniciam a análise e mantêm a janela aberta com menu em português.
+- Andamento, achados, caminhos, confiança e cobertura parcial aparecem no CMD.
+- TXT e JSON salvos automaticamente na pasta local de relatórios do usuário.
+- Seleção de arquivo por diálogo e suporte a arrastar arquivo para o EXE.
+- Tratamento assistido pelo Microsoft Defender instalado/ativo, com confirmação
+  interativa, elevação quando necessária e validação da assinatura Microsoft.
+- Resultados do Defender não são traduzidos automaticamente como “removido”.
+- Acesso à Segurança do Windows e testes contra tratamento por entrada redirecionada.
+- VMProtect mantido. Código-fonte, SDK e relatórios locais fora da distribuição.
+
+Limite de validação: não houve remoção real de malware durante a homologação.
+O tratamento depende da disponibilidade e das configurações do Defender.
+
 ## v2.0.0 — 28/10/2026
 
 Primeira distribuição pública da geração v2 do Hardcore Anti-Grabber.

@@ -1,136 +1,135 @@
 # Hardcore Anti-Grabber
 
-Auditoria defensiva independente para Windows x64, voltada a indícios associados
-a grabbers e stealers. Este repositório distribui documentação e releases
-binárias. O código-fonte da aplicação não é publicado aqui.
+**Verifique possíveis sinais de stealer sem precisar saber usar CMD.**
 
-**[Downloads e versões](https://github.com/luqfuck/hardcore-anti-grabber/releases)**
+**[Baixar para Windows x64](https://github.com/luqfuck/hardcore-anti-grabber/releases/latest/download/HardcoreAntiGrabber.exe)** · [Todas as versões](https://github.com/luqfuck/hardcore-anti-grabber/releases)
 
-## O que faz
+## Como usar
 
-| Camada | Evidência examinada |
+1. Baixe o executável.
+2. Abra `HardcoreAntiGrabber.exe` com **dois cliques**.
+3. Aguarde a verificação. O andamento e o resultado aparecem na própria janela.
+4. Escolha uma opção pelo número e pressione Enter.
+
+Você não precisa abrir um terminal, digitar comandos nem escolher onde salvar
+o relatório. A janela permanece aberta até selecionar **0 — Fechar**.
+
+```text
+O QUE DESEJA FAZER?
+  1 - Verificar e tratar com Microsoft Defender
+  2 - Ver todos os detalhes nesta janela
+  3 - Abrir Segurança do Windows (histórico e quarentena)
+  4 - Verificar outro arquivo (abre uma janela para escolher)
+  5 - Verificar novamente o computador
+  0 - Fechar
+```
+
+Para examinar um programa específico, use a opção 4 ou arraste o arquivo para
+o ícone do anti-grabber. O arquivo selecionado é analisado sem ser executado.
+
+## Verificar e tratar
+
+A opção 1 usa o **Microsoft Defender já instalado e ativo**. O Windows poderá
+pedir permissão de administrador; a etapa também pede confirmação antes de iniciar.
+
+- Sem arquivo selecionado, faz uma verificação rápida do computador.
+- Depois de selecionar um arquivo, verifica esse arquivo especificamente.
+- O Defender pode colocar ameaças em quarentena ou removê-las conforme as
+  configurações existentes do Windows.
+- Se o Defender estiver indisponível, o programa informa e não inicia tratamento.
+- Os alertas do anti-grabber, sozinhos, não provocam exclusão de arquivos.
+
+**O programa não promete remover todos os stealers.** Um alerta não confirma
+infecção e ausência de alerta não certifica máquina limpa. O retorno de sucesso
+do Defender pode significar nenhuma ameaça encontrada **ou** ameaça tratada;
+ele não informa sozinho quantos arquivos foram removidos. Veja o resultado no
+Histórico de proteção da Segurança do Windows. Itens em quarentena podem ter
+opção de restauração; nem toda remoção pode ser desfeita.
+
+A integração segue o [comportamento documentado do Microsoft Defender](https://learn.microsoft.com/en-us/defender-endpoint/command-line-arguments-microsoft-defender-antivirus).
+Não altera exclusões, políticas, configurações de nuvem ou serviços do Windows.
+
+## Resultado e relatórios
+
+A tela mostra os programas/arquivos envolvidos, a confiança do indício e quando
+a verificação ficou incompleta. Indícios fracos não são apresentados como
+confirmação de roubo.
+
+No modo simples, os relatórios são salvos automaticamente em:
+
+```text
+%LOCALAPPDATA%\HardcoreAntiGrabber\Relatorios
+```
+
+Há uma versão TXT para leitura e JSON para análise técnica. A análise continua
+visível no CMD mesmo quando não é possível salvar o relatório.
+
+## O que é examinado
+
+| Camada | O que procura |
 |---|---|
-| Processos | Snapshot de processos ativos e caminhos acessíveis |
-| Inicialização | Run/RunOnce nas visões 32/64 bits e arquivos diretos de Startup |
-| Assinatura | Validação Authenticode usando cache local |
-| Arquivo PE | Combinação de referências ASCII/UTF-16 e imports reais relacionados a coleta, API de conta e transporte |
-| Histórico | Correlação de eventos Sysmon existentes por ProcessGuid, imagem e janela temporal |
-| Relatório | JSON local com severidade, confiança, escopo, cobertura e referências de evidência |
+| Processos | Programas ativos e caminhos acessíveis |
+| Inicialização | Run/RunOnce e arquivos diretos de Startup |
+| Assinatura | Authenticode com cache local |
+| Arquivo PE | Combinações de referências e imports relacionados à coleta e envio |
+| Histórico | Eventos Sysmon existentes ligados à mesma execução |
+| Tratamento | Verificação e ações do Microsoft Defender, após consentimento |
 
-Não depende do Scanner principal. Não instala serviço ou driver. É uma auditoria
-pontual, não um antivírus residente ou bloqueador de tráfego.
+É independente do Scanner principal e não instala driver, serviço ou sensor.
+O Sysmon é opcional; sem ele, a camada histórica pode ficar indisponível.
 
-## Começar
+## Privacidade e limites
 
-1. Baixe o pacote Windows x64 na página de Releases e extraia para uma pasta gravável.
-2. Abra um terminal nessa pasta.
-3. Execute a auditoria:
+A análise própria é somente leitura: não abre bases de senhas, cookies, tokens,
+carteiras nem memória de outros processos. Não executa amostras, não armazena
+comandos brutos e não envia seus relatórios a um servidor. O tratamento separado
+usa o Defender e suas configurações existentes.
+
+Relatórios podem conter caminhos e identificadores. Revise antes de compartilhar;
+não envie credenciais ou dumps de perfis em issues.
+
+- PE automático: até 64 candidatos, 32 MiB por imagem e 128 MiB totais.
+- A seleção automática não inclui imagens com assinatura validada; uma seleção
+  explícita permite examiná-las. Assinatura válida não garante ausência de malware.
+- Histórico: últimos 60 minutos, até 10.000 eventos e orçamento de 10 segundos
+  para aquisição. Cobertura depende da política Sysmon existente.
+- Acesso a processo não prova leitura de bytes; conexão não prova envio de dados.
+- Sem análise própria de scripts, desempacotamento, extensões de navegador,
+  tarefas agendadas, serviços ou destinos de atalhos Startup.
+- Strings cifradas e importação dinâmica podem impedir coincidências.
+- Uma verificação rápida do Defender não substitui todas as modalidades de exame.
+
+## Para usuários técnicos
 
 ```powershell
 .\HardcoreAntiGrabber.exe --output .\relatorio.json
-```
-
-Sem `--output`, o arquivo `anti-grabber-report.json` fica ao lado do executável.
-A execução usa as permissões atuais; falhas de acesso podem reduzir a cobertura.
-O Sysmon é opcional e precisa estar previamente instalado/configurado para a
-camada histórica funcionar. O programa não o instala nem altera sua política.
-
-### Examinar somente um arquivo
-
-```powershell
 .\HardcoreAntiGrabber.exe --file C:\Analise\arquivo.exe --output .\arquivo.json
-```
-
-O arquivo é tratado como dados, sem execução ou carregamento como DLL. Essa
-opção também permite analisar um PE assinado. `--stdin` aceita um stream de bytes
-PE brutos; não é um extrator de RAR/ZIP nem um leitor de nomes de arquivo.
-
-### Verificar o funcionamento
-
-```powershell
+.\HardcoreAntiGrabber.exe --interactive
 .\HardcoreAntiGrabber.exe --self-test
-.\HardcoreAntiGrabber.exe --help
+.\HardcoreAntiGrabber.exe --defender-info
+.\HardcoreAntiGrabber.exe --protection-status
 ```
 
-Os testes internos usam fixtures sintéticas sem instruções executáveis. Não
-executam malware nem acessam credenciais para simular um ataque.
+Com argumentos técnicos, o programa também mostra resultados legíveis no console.
+`--stdin` recebe bytes PE brutos, não arquivos RAR/ZIP. A limpeza exige confirmação
+em console interativo; entrada redirecionada não a autoriza.
 
-## Interpretar os resultados
+Na análise CLI: `0` = sem alerta médio/alto, `2` = argumentos inválidos,
+`3` = erro de relatório, `4` = análise incompleta, `5` = self-test falhou,
+`10` = revisão média, `20` = revisão alta. Alertas têm precedência sobre o código
+de cobertura incompleta. O menu simples retorna `0` ao fechar, sem certificar
+o estado da máquina.
 
-**Severidade é prioridade de revisão; confiança é força do indício.** Um alerta
-não é uma confirmação de infecção. O relatório separa capacidade estática de
-evidência histórica e informa as limitações da coleta.
+## Distribuição e validação
 
-A regra PE exige uma combinação de capacidades. A presença de um nome, um
-webhook ou uma API isolada não basta para essa regra. Um resultado estático alto
-tem confiança média: ele não demonstra que o arquivo foi executado ou enviou dados.
+A v2.1.0 usa VMProtect Lite 3.8.7 nas rotinas de indicadores estáticos e correlação.
+O executável **não tem assinatura Authenticode**. VMProtect não substitui assinatura
+digital nem garante impossibilidade de engenharia reversa.
 
-A correlação histórica verifica a mesma ProcessGuid e imagem, em até 300 segundos.
-Direito de leitura sobre um processo sensível recebe prioridade média e baixa
-confiança. A conexão posterior a domínio Discord ainda não comprova upload.
-A combinação adicional com a criação de um artefato específico eleva a prioridade.
-Ferramentas de diagnóstico, acessibilidade e segurança podem produzir sinais parecidos.
+Builds e testes cobrem regras, controles negativos, interface no console,
+cancelamento, entrada redirecionada e interpretação dos códigos do Defender.
+**Não houve remoção real de malware durante a homologação.**
 
-Segundo a [documentação do Sysmon](https://learn.microsoft.com/sysinternals/downloads/sysmon),
-os eventos dependem da configuração existente. Acesso a processo não prova leitura
-de bytes; conexão não mostra o corpo HTTP. Ausência de eventos não prova ausência de roubo.
-
-| Código de saída | Significado |
-|---|---|
-| 0 | Operação concluída sem achado médio/alto; não certifica máquina limpa |
-| 2 | Argumentos inválidos ou conflito entre entrada e saída |
-| 3 | Falha ao gravar o relatório |
-| 4 | Imagem não analisada ou cobertura incompleta, sem alerta de prioridade maior |
-| 5 | Falha do self-test |
-| 10 | Achado médio para revisão |
-| 20 | Achado alto para revisão |
-
-`10/20` têm precedência sobre `4`. Sempre examine também `coverage`, `warnings`
-e `limitations`, mesmo quando há alertas.
-
-## Cobertura e limites
-
-- PE automático: imagens executáveis de processos/persistências cuja assinatura
-  não foi validada; até 64 candidatos, 32 MiB por imagem e 128 MiB totais.
-- Binários com assinatura validada ficam fora da seleção automática. Assinatura
-  válida não garante ausência de comportamento malicioso; use `--file` quando necessário.
-- Sysmon: últimos 60 minutos, até 10.000 eventos e orçamento de 10 segundos de
-  aquisição. Limites e falhas são registrados explicitamente.
-- Processos já encerrados podem não aparecer no snapshot. Uma consulta histórica
-  concluída não comprova que a política capturava todos os eventos relevantes.
-- Sem leitura genérica de arquivos de perfil, análise de scripts, desempacotamento,
-  inspeção de extensões de navegador, tarefas agendadas ou serviços. Destinos de
-  atalhos Startup não são resolvidos nesta versão.
-- Strings cifradas e importação dinâmica podem impedir coincidências estáticas.
-  `no_static_rule_match` significa apenas que a regra não coincidiu.
-- Comandos de inicialização sem aspas podem ter destino ambíguo.
-
-## Privacidade
-
-A aquisição é somente leitura; a auditoria grava seu relatório local. Não lê bases
-de senhas, cookies, tokens, carteiras nem memória de outros processos. Não armazena
-linhas de comando brutas, não encerra processos, não altera persistência e não
-quarentena arquivos. Não envia o relatório a um servidor.
-
-Relatórios podem conter caminhos, nomes de arquivos, GUIDs e IDs de eventos.
-Revise esses dados antes de compartilhar. Não envie credenciais, tokens ou dumps
-de perfis em issues.
-
-## Distribuição
-
-Cada release informa seus testes, proteção aplicada e hashes SHA-256. VMProtect,
-quando indicado na release, protege o binário; não equivale a assinatura digital
-nem garante impossibilidade de engenharia reversa.
-
-A v2.0.0 usa VMProtect Lite 3.8.7, com virtualização das rotinas de indicadores
-estáticos e correlação histórica. O executável não tem assinatura Authenticode.
-O comando `--protection-status` deve imprimir `vmprotect_protected` e retornar `0`.
-
-Confira um download com:
-
-```powershell
-Get-FileHash .\HardcoreAntiGrabber.exe -Algorithm SHA256
-```
-
-Compare com `SHA256SUMS.txt` da mesma versão. Os arquivos automáticos “Source code”
-do GitHub contêm somente a documentação deste repositório, não o código da aplicação.
+Repositório público contém somente documentação; o código-fonte não é distribuído.
+Os arquivos automáticos “Source code” do GitHub também contêm apenas documentação.
+As releases oferecem EXE, ZIP com instruções e hashes SHA-256.
