@@ -122,6 +122,10 @@ Cada release informa seus testes, proteção aplicada e hashes SHA-256. VMProtec
 quando indicado na release, protege o binário; não equivale a assinatura digital
 nem garante impossibilidade de engenharia reversa.
 
+A v2.0.0 usa VMProtect Lite 3.8.7, com virtualização das rotinas de indicadores
+estáticos e correlação histórica. O executável não tem assinatura Authenticode.
+O comando `--protection-status` deve imprimir `vmprotect_protected` e retornar `0`.
+
 Confira um download com:
 
 ```powershell

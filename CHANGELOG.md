@@ -12,6 +12,8 @@ Primeira distribuição pública da geração v2 do Hardcore Anti-Grabber.
 - Histórico Sysmon existente por identidade da execução e janela temporal.
 - Relatório `hardcore-anti-grabber/v2`, com confiança e cobertura explícitas.
 - Modos `--file`, `--stdin`, `--output`, `--self-test` e `--help`.
+- Distribuição protegida com VMProtect Lite 3.8.7; virtualização das rotinas
+  de indicadores e correlação. Verificação com `--protection-status`.
 - Testes negativos para PE inválido, limites, imports ausentes/corrompidos,
   GUIDs distintos/nulos, ordenação temporal e domínios com sufixos enganosos.
 
